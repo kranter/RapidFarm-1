@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="input-group mb-3">
+  <input id="command_field" type="text" class="form-control" placeholder="Команда">
+  <div class="input-group-append">
+    <button id="send_command" class="btn btn-outline-secondary" type="button">Послать</button>
+  </div>
+</div>
+<ul class="list-group">
+	{% for line in lines %}
+	<li class="list-group-item">{{ line }}</li>
+	{% endfor %}
+</ul>
+<script>
+(function(){
+  $('#send_command').on('click', function (event){
+    var command = $('#command_field')[0].value;
+    $.post("/send_command", {'command': command});
+  });
+})();
+</script>
+{% endblock %}
