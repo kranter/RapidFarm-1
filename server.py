@@ -28,22 +28,26 @@ def receive_command():
     print(command)
     return 'Ok'
 
-def add_new_data(str_data):
-    with sqlite3.connect('sensors_data.db') as conn:
+def add_new_data(str_data, AirTemp, WaterTemp, Humidity, LightStatement, AdditInfo):
+    with sqlite3.connect('SensorsDB.db') as conn:
         c = conn.cursor()
         tmp = str_data.split(',')
-        req = "INSERT INTO commoninfo(a,b,c) VALUES ('%s','%s','%s')"%(str(tmp[0].split('=')[1]),str(tmp[1].split('=')[1]),str(tmp[2].split('=')[1]))
+        req = "INSERT INTO \"Sensors Data\"(AirTemp,WaterTemp,Humidity,LightStatement,AdditInfo) VALUES ('%s','%s','%s','%s','%s')"%(AirTemp,WaterTemp,Humidity,LightStatement,AdditInfo);
         c.execute(req)
         conn.commit()
 
 @app.route('/new_data', methods=['POST']) 
 def handle_new_data():
+    AirTemp = request.args.get('AirTemp')
+    WaterTemp = request.args.get('WaterTemp')
+    Humidity = request.args.get('Humidity')
+    LightStatement = request.args.get('LightStatement')
+    AdditInfo = request.args.get('AdditInfo')
     data = request.data
-    print(data)
     global db
     clear_data = data
     db.append(clear_data)
-    add_new_data(data.decode('ascii'))
+    add_new_data(data.decode('ascii'), AirTemp, WaterTemp, Humidity, LightStatement, AdditInfo)
 
     return 'Success'
 
